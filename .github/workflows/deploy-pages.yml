@@ -2,17 +2,14 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, feature/boostrap_app]
   workflow_dispatch:
 
-# Least privilege needed for the Pages deployment to authenticate.
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Never run two deployments at once, but let a queued one finish rather than
-# cancelling it — a cancelled deploy can leave the site on an older build.
 concurrency:
   group: pages
   cancel-in-progress: false
@@ -27,16 +24,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
 
-      # No build step: Transformer is hand-written HTML/CSS/JS with no
-      # dependencies, so the repository root is the site.
-      - name: Upload site
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Next.js app
+        run: npm run build
+
+      - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: ./out
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
