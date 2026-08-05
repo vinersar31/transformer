@@ -1,0 +1,21 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache & Jupyter checkpoints
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
